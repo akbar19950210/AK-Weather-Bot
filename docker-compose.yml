@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.3'
 
 services:
   ak-postgres-db:
@@ -29,4 +29,5 @@ services:
     restart: always
 
 volumes:
+
   ak-db-data:
