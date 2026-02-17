@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ak-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ak-postgres
+  template:
+    metadata:
+      labels:
+        app: ak-postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15-alpine
+        env:
+        - name: POSTGRES_DB
+          value: "ak_weather"
+        - name: POSTGRES_USER
+          value: "ak_user"
+        - name: POSTGRES_PASSWORD
+          value: "ak_password"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ak-postgres-db # 机器人通过这个名字找到数据库
+spec:
+  selector:
+    app: ak-postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
