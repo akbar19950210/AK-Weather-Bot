@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  ak-postgres-db:
+    image: postgres:15-alpine
+    container_name: ak-postgres-db
+    environment:
+      POSTGRES_DB: ak_weather
+      POSTGRES_USER: ak_user
+      POSTGRES_PASSWORD: ak_password
+    volumes:
+      - ak-db-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: always
+
+  ak-weather-bot:
+    build: .
+    container_name: ak-weather-bot
+    depends_on:
+      - ak-postgres-db
+    environment:
+      # 【注意】这里的凭证需要在 Jenkins 中作为环境变量注入，这里留空以保证安全
+      TELEGRAM_TOKEN: ${TELEGRAM_TOKEN}
+      WEATHER_API_KEY: ${WEATHER_API_KEY}
+      DB_HOST: ak-postgres-db
+      DB_NAME: ak_weather
+      DB_USER: ak_user
+      DB_PASS: ak_password
+    restart: always
+
+volumes:
+  ak-db-data:

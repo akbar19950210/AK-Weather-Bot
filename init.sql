@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS ak_weather_logs (
+    id SERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    city VARCHAR(100) NOT NULL,
+    query_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
