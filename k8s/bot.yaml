@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ak-weather-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ak-weather-bot
+  template:
+    metadata:
+      labels:
+        app: ak-weather-bot
+    spec:
+      containers:
+      - name: bot
+        # 这里已经换成了你的专属 Docker Hub 镜像地址！
+        image: akbar1234567/ak-weather-bot:latest
+        imagePullPolicy: Always
+        env:
+        - name: DB_HOST
+          value: "ak-postgres-db"
+        - name: DB_NAME
+          value: "ak_weather"
+        - name: DB_USER
+          value: "ak_user"
+        - name: DB_PASS
+          value: "ak_password"
+        # 密码和 Token 会由 Jenkins 动态作为 Secret 注入，保证极致安全
+        - name: TELEGRAM_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: ak-bot-secrets
+              key: TELEGRAM_TOKEN
+        - name: WEATHER_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ak-bot-secrets
+              key: WEATHER_API_KEY
